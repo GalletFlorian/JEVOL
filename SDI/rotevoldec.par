@@ -1,0 +1,29 @@
+c-----------------------------------------------------------------
+c    Wind-braking  ksk        kmm        ksc   -> Vcrit
+c-----------------------------------------------------------------
+c    Skumanich:    input      0          0     -> Vcrit=0.
+c    MM       :    0          input      0     -> VCR it=0.
+c    SK-MM    :    input      input      0     -> Vcrit computed, wsat=input
+c    Schatzman:    0          0          input -> Vcrit=0.
+c    Charbonneau:  2.e-11     1.e-10     0     -> wsat=input
+c-----------------------------------------------------------------
+
+pinit              1.4d0          	day : initial rotation period = constante jusqu'au decouplage
+masse              1.d0          	solar mass
+modele evolutif    mod10amard18.dat
+constantes: ksk    0.0d-12        	w^3 law
+            kmm    0.0d-11         	w^2 law
+            ksc    0.0 
+            kmp    1.0                
+parameter K        1.d0
+parameter K1MP     1.7d0
+parameter K2MP     0.0506d0
+parameter a1       1.3d0            	Slow rotator (1M0) ; plus utilisé
+parameter a2       0.79d0            	Fast rotator (1M0) ; plus utilisé
+parameter wsf      5.d0            		omega limit btw slow and fast ; plus utilisé
+parameter b        1.65d0           	B prop w^b ; plus utilisé
+parameter m        0.22d0           	Matt & Pudritz
+Omegasat           12.              	omega sun -> w law ; plus utilisé
+taudec             10.d6          		year  
+cl                 1                    Star/disk interaction process (1 = Claudio, 0 = Sean)
+tdisk              2.d6                 Disk lifetime, yr
