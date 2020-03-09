@@ -17,7 +17,7 @@ Input parameters:
 3) modele evolutif: the stellar evolution model used
 4) ksk, kmm, ksc, kmp: Skumanich, Mayor-Mermilliod, Schatzmann, and  Matt braking law constant constants
 5) K, K1MP, K2MP, m: Matt et al. (2012) braking law constants
-6) taudec: `&#964;`
+6) taudec: `&rarr;`
 7) tdisk
 8) brklaw
 9) parameter K3
