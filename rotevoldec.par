@@ -21,7 +21,7 @@ parameter K2MP     0.0506d0
 parameter m        0.22d0           Matt et al. (2012)
 taudec             561.d6                year
 tdisk              4.0d6                year
-victor             0
+brklaw             0
 parameter K3       2.8
 parameter K4       0.2
 parameter mvic     0.11

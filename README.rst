@@ -1,3 +1,6 @@
+.. role::  raw-html(raw)
+    :format: html
+
 *JEVOL* : Angular moment evolution code
 =======================================
 
@@ -5,8 +8,22 @@ This numerical code is developed to follow the evolution of the rotation rate of
 
 *JEVOL* is writen in Fortran77 
 
+The input parameters are stored in the rotevoldec.par file
 
-Input parameter: 
+Input parameters: 
+
+1) pinit: the initial rotation period (P\ :sub:`rot`\) in days  
+2) masse: the mass of the star           
+3) modele evolutif: the stellar evolution model used
+4) ksk, kmm, ksc, kmp: Skumanich, Mayor-Mermilliod, Schatzmann, and  Matt braking law constant constants
+5) K, K1MP, K2MP, m: Matt et al. (2012) braking law constants      
+9) taudec:        
+10) tdisk    This way :raw-html:`&rarr;`        
+11) brklaw          
+12) parameter K3    
+13) parameter K4    
+14) parameter mvic  
+
 
 1) Planetary orbital period (P\ :sub:`orb`\) in days
 2) Stellar rotation period (P\ :sub:`rot`\) in days
