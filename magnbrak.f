@@ -91,58 +91,39 @@ c        ---------------------------------------------
 
 c --------------------------------------------------------
 
-
+c	  
       else if ((ksk.eq. 0.) .and. (kmm.eq. 0.) .and. (kmp.ne. 0.)) then 
 
-         mdotstar = 0.0
-         bstar = 0.0
+      	mdotstar = 0.0
+       	bstar = 0.0
         call mdot(W0,r,L,mdotstar,bstar,Ro,ff,Teff)
         
         mdotstarC = mdotstar
         
-
-
 c------------------------Mdot/Braking Johnstone-------------------------
 
        omegasatJ = 15 * wsol * (mstar/1)**2.3
-
-
+       
        if (W0 .ge. omegasatJ) then
-        mdotstarJ = (mdotsun * (r/rsol)**2. * (omegasatJ/wsol)**1.33) 
+      	mdotstarJ = (mdotsun * (r/rsol)**2. * (omegasatJ/wsol)**1.33) 
      *   / (mstar)**3.36
-     
         WdownconvJ = 7.15e30*(15)**1.89*(W0/wsol)*(mstar)**4.42 
      *  * ((t1-t2)/Ic) * K1MP
-     
-     
         else 
-         mdotstarJ = (mdotsun * (r/rsol)**2. * (W0/wsol)**1.33) 
+        mdotstarJ = (mdotsun * (r/rsol)**2. * (W0/wsol)**1.33) 
      *   / (mstar)**3.36
         WdownconvJ = 7.15e30*(W0/wsol)**2.89*((t1-t2)/Ic)*K1MP
        endif
         
-
-        
-        
-        mdotstar = mdotstarC
+      	mdotstar = mdotstarC
 
 
-c------------Mass loss Johnstone------------
-c
+c--------------------------Mass loss Johnstone--------------------------
 c          mdotstar = mdotstarJ
-c
-c-------------------------------------------
-
-c        write(6,*) mdotstarC, mdotstar
-
-
+c          write(6,*) mdotstarC, mdotstar
 c-----------------------------------------------------------------------
 
-
-        
-c----Test pour voir quel Mdot il faut si K_1 = 1.7 pour faible masse----        
-c        mdotstar = mdotstar * 8.
-c-----------------------------------------------------------------------
+    
 
 c------------Utilisation of Mdot and Bstar from Cranmer 2011------------
 
@@ -151,24 +132,11 @@ c------------Utilisation of Mdot and Bstar from Cranmer 2011------------
      *        (t1-t2)/(Ic *(K2MP**2. *2.*G*mstar*msol + K*w0**(2.) *
      *        r**(3.))**(m))
      
-c Avec facteur 2/3 pour la vitesse de liberation! Facteur 3**m 
-c          Wdownconv = K1MP**2.*kmp*Bstar**(4.*m)* 
-c     *        r**(5.*m+2.)*w0**(1.)*(mdotstar)**(1.-2.*m) *
-c     *        (t1-t2)/(Ic *(K2MP**2. *2./3.*G*mstar*msol + K*w0**(2.) *
-c     *        r**(3.))**(m))
-     
-c      write(6,*) Wdownconv,WdownconvJ,W0/wsol,mstar,t1/3.15E13,Ic
-
-
-
 
      
-c------------Freinage Johnstone------------
-c          
+c---------------------------Braking Johnstone---------------------------
 c          Wdownconv = WdownconvJ
-c
-c------------------------------------------
-
+c-----------------------------------------------------------------------
 
 	   if (brklaw .eq. 1) then
 c     Reville et al. (2015)	   
@@ -181,19 +149,15 @@ c     Reville et al. (2015)
        endif
        
 	   if (brklaw .eq. 2) then
-	   
-	   
-c	        if (t1/year .lt. 4.e7) then
+	        if (t1/year .lt. 4.e7) then
 	        	K3 = 2.  
 	            mvic = 0.235
 	      Wdownconv1 = K3**2.*Bstar**(4.*mvic) 
      *     *r**(5.*mvic+2.)*w0**(1.)*(mdotstar)**(1.-2.*mvic) *
      *        (t1-t2)/ (Ic *(2.*G*mstar*msol + (2/K4**2.)*w0**(2.) *
      *        r**(3.))**(mvic))
-	            
-	            
-	            
-c	        else if (t1/year .lt. 2.e8) then
+	            	            
+	        else if (t1/year .lt. 2.e8) then
 	            K3 = 1.7
 	            mvic = 0.15
 	      Wdownconv2 = K3**2.*Bstar**(4.*mvic) 
@@ -201,76 +165,47 @@ c	        else if (t1/year .lt. 2.e8) then
      *        (t1-t2)/ (Ic *(2.*G*mstar*msol + (2/K4**2.)*w0**(2.) *
      *        r**(3.))**(mvic))
      	        
-c	        else 
+	        else 
 	            K3 = 1.7
 	            mvic = 0.11
 	      Wdownconv3 = K3**2.*Bstar**(4.*mvic) 
      *     *r**(5.*mvic+2.)*w0**(1.)*(mdotstar)**(1.-2.*mvic) *
      *        (t1-t2)/ (Ic *(2.*G*mstar*msol + (2/K4**2.)*w0**(2.) *
      *        r**(3.))**(mvic))	            
-c	        endif            
+	        endif            
 	   
-c	      Wdownconv = K3**2.*Bstar**(4.*mvic) 
-c     *     *r**(5.*mvic+2.)*w0**(1.)*(mdotstar)**(1.-2.*mvic) *
-c     *        (t1-t2)/ (Ic *(2.*G*mstar*msol + (2/K4**2.)*w0**(2.) *
-c     *        r**(3.))**(mvic))
-
           Wdownconv =Wdownconv1*2.0 + Wdownconv2*2.0 + Wdownconv3*1.
      
        endif
        
-       if (brklaw .eq. 3) then
+      	if (brklaw .eq. 3) then
 c      Matt et al. 2015
-
-            tcz = 314.24*exp(-(Teff/1952.5)-(Teff/6250.)**18.)+ 0.002
-            
-            Rosun =  1.96
-            chi = 10
-            Wsun = 2.87e-6
-            tczsun = 12.9
-c            factor = 0.16 !slow
-            factor = 0.16
+       		tcz = 314.24*exp(-(Teff/1952.5)-(Teff/6250.)**18.)+ 0.002   
+        	Rosun =  1.96
+   	     	chi = 10
+    	    Wsun = 2.87e-6
+    		tczsun = 12.9
+        	factor = 0.16
                         
-            ratio = W0*(r)**(3/2)*(G*mstar*msol)**(-0.5)
-            gamma = (1+(ratio/0.072)**2)**0.5 
+    		ratio = W0*(r)**(3/2)*(G*mstar*msol)**(-0.5)
+        	gamma = (1+(ratio/0.072)**2)**0.5 
         	T0 = factor* 5.0e31*(r/rsol)**3.1 * mstar**0.5*gamma**(2*m)
-c        	p = 2.55 !slow
-            p = 2.3
-            	if (Ro .le. (Rosun/chi) ) then
-            		
-            		Wdownconv = (T0 * chi**p * (W0/Wsun))*((t1-t2)/Ic)
-            	else 
-            		Wdownconv = (T0*(tcz/tczsun)**p * (W0/Wsun)**(p+1))
-     *       			*((t1-t2)/Ic)
-            	endif	
+        	p = 2.3
+        	if (Ro .le. (Rosun/chi) ) then
+        		Wdownconv = (T0 * chi**p * (W0/Wsun))*((t1-t2)/Ic)
+        	else 
+           		Wdownconv = (T0*(tcz/tczsun)**p * (W0/Wsun)**(p+1))
+     *       *((t1-t2)/Ic)
+        	endif	
        
        
        endif
 
-c-------------No braking case-------------     
+c----------------------------No braking case----------------------------     
 c          Wdownconv = 0.0
-c_________________________________________
+c-----------------------------------------------------------------------
      
-c-----------------------------------------------------------------------
-c
-c
-c------------------Reiners & Mohanty 2012 braking law-------------------
-
-c        if (w0.lt.Wsat) then
-c          Wdownconv = K1MP**2.*kmp*3**(4.*m)*Wsol**(-b*4.*m)* 
-c     *        r**(5.*m+2.)*w0**(1.+b*4.*m) * (mdotstar)**(1.-2.*m) *
-c     *        (t1-t2)/(Ic *(K2MP**2. *2.*G*mstar*msol + K*w0**(2.) *
-c     *        r**(3.))**(m))
-c        else
-c          Wdownconv = K1MP**(2.)*3**(4.*m)*ksat* Wsol**(-b*4.*m)*
-c     *        r**(5.*m+2.)*w0 * (mdotstar)**(1.-2.*m) * 
-c     *        (t1-t2) / (Ic * (K2MP**2. *2.*G*mstar*msol + 
-c     *        K*wsat**(2.)*r**(3.))**(m))
-c        end if   
-
-c-----------------------------------------------------------------------
-
-
+     
 c ---------------------------------------------
 c Add of the Reiners & Mohanty 2012 braking law
       else if ((ksk.eq.0.) .and. (kmm.eq.0.) .and. (kmp.eq.0.)) then

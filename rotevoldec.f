@@ -20,7 +20,7 @@ c          - Dynamo relationship parameter (b)
 c          - saturation threshold velocity Omegasat
 c          - coupling timescale parameter (taudec)
 c
-c   output: evolutionary track of
+c  output: evolutionary track of
 c           vconvevol.dat    :  surface velocity of the envelope
 c           vradevol.dat     :                          core
 c           pconvevol.dat    :  rotation period of the envelope
@@ -107,7 +107,7 @@ c added 12.07.07 Solar angular momentum
       REAL*8 WINIT,JUPRAD,WUPRAD,WUPCONV,WDOWNCONV
       REAL*8 WRAD(NTRACK,NSTEP),WCONV(NTRACK,NSTEP),
      *     WCRIT,WSAT,AMconv(ntrack,nstep), DJ(ntrack,nstep),
-     *     amrad(ntrack,nstep)
+     *     AMrad(ntrack,nstep)
       REAL*8 RINIT, mstar ,DELTAWR,DELTAWC, deltaJ
       real*8 taudec(NSTEP),taudecinit,breaking(NSTEP)
       REAL*8 DPI, KMS, MSOL, YEAR, PI
@@ -138,10 +138,8 @@ c ---------------------------------------------
 
 c added 12.07.07 Solar angular momentum
       AMSOL = 1.63D48
-      !AMSOL = 1.84e48 !Pinto et al. 2010
       ISOL = 6.411d53
       DAMSOL = 7.169D30
-      !DAMSOL = 3.67785E+30 !Calcul perso en prenant Matt et al. 2012 pour RA et Bsun = 2 Gauss
       MSOL = 1.989D33
       RSOL = 6.9599D+10
       WSOL=2.87D-6
@@ -215,7 +213,7 @@ c-----------------------------------------------------------------------
       
       if ((brklaw .eq. 1) .or. (brklaw .eq. 2) ) then
       write(6,*) '***********************'
-      write(6,"(a24,I1)") 'Reville et al. (2014) v.',brklaw
+      write(6,"(a24,I1)") 'Reville et al. (2015) v.',brklaw
       write(6,*) '***********************'
       endif
       
@@ -315,10 +313,6 @@ c      taudec=taudec*year !taudec is now in second
  1111 format('coupling time=',e7.2,' years')
       close(1)
 
-c Open the braking law backup file 
-      open(21,file='brakinglaw.dat',status='unknown')
-
-
  512    format(1x,f10.4,1x,f12.6,1x,ES14.7E3,1x,f10.4)
  513    format(1x,f10.4,1x,f12.6,1x,f10.4,1x,f10.4)
  514    format(1x,f10.4,1x,f10.7,1x,f10.4,1x,f12.6)
@@ -352,19 +346,15 @@ c-----------------------------------------------------------------------
 
 c------------------Reiners braking law test------------------------
 c If flag2 = 1. the model use the Reiners & Mohanty 2012 braking law
-c
       flag2 = 0.
 c------------------------------------------------------------------
 
 c read the evolution model ; index = the time at which the disk disappear
 c for a given evolutionary track : itrack 
 c indexdec = the time a which the core starts to develop
-
-
          open(unit=10,file="./Model/"//model,form='formatted',
      *     status='old')
          read(10,'(a72)') head
-
          do j=1,NSTEP
             read(10,*,end=1) idumm,Lum(j),Teff(j),tstar(j),rstar(j),
      *                       k2conv(j),k2rad(j),Mrad(j),Rrad(j)
@@ -397,7 +387,7 @@ c indexdec = the time a which the core starts to develop
  				WCONV(i,j) = 0.0 
  				AMconv(i,j) = 0.0
  				DJ(i,j) = 0.0
- 				amrad(i,j) = 0.0
+ 				AMrad(i,j) = 0.0
  			enddo
  		enddo
  
@@ -465,7 +455,7 @@ c     *****************************
             Wrad(itrack,j)=0.
             dj(itrack,j)=0.
             AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
-            amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+            AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
             taudec(j) = taudecinit
               if ( (tstar(j)-tstar(j-1)) .ne. 0.0) then
                write(77,515) dt1, 0.0*Iconv(j-1)/
@@ -543,7 +533,7 @@ c     			flag=0 !Remove inteprolation
 
      
                AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
-               amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+               AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
 
  108           format(f7.4,2x,2(f8.3,2x),7(d10.4,2x))
  111           format(f7.4,2x,2(f7.3,2x),6(d10.4,2x))
@@ -702,14 +692,6 @@ c   III Core-envelope decoupling & star-disk uncoupled
 c       **********************************************
          do j=index2+1,n
 
-         
-         
-         if (Mrad(j)/Mstar .gt. 0.98) then
-c         	K1MP = K1MP - K1MP*0.2
-         endif
-
-
-
 c     3.1) instantaneous spin-up from contraction 
 c          --------------------------------------
             Wupconv = Wconv(itrack,j-1) * (Iconv(j-1)/Iconv(j)-1.)
@@ -730,19 +712,13 @@ c          ------------------------------
                
 c F.G 6/10/2014
 c Taudec Spada
-
-
 		 if (Wrad(itrack,j-1) .eq. Wconv(itrack,j-1)) then
-
 		   taudec(j) = taudecinit*10000. !if equal velocity : weak coupling?
-
          else
           taudec(j) = taudecinit * ((conS*wsol)
      *        /abs(Wrad(itrack,j-1)-Wconv(itrack,j-1)))**alphaS
-     
          endif
-         
-          
+                  
           if ( (taudec(j)/year) .gt. 5000e6) then
           
            taudec(j) = 5000e6 * year
@@ -750,11 +726,9 @@ c Taudec Spada
           endif
           
 
-         
+c        Force taudec(j) to be taudecinit
          taudec(j) = taudecinit
-
-
-     
+  
                
 c     3.3) Core develops
 c          -------------
@@ -841,7 +815,7 @@ c We pass here only once, when j = index2+1 = indexdec
             	     
             dj(itrack,j)=deltaJ
             AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
-            amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+            AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
                         
 
  112        format(5(f8.5,2x))
@@ -943,19 +917,7 @@ c compute 1/j*dj/dt in Myr-1 for t>=1Myr unit=27 (JB, 11.07.07)
 
 
 c check completely convective case for dJ/dt
-         if (k2rad(j).eq. 0.d0) then
-         
-         
-			if ( tstar(j) .ne. tstar(j-1)) then
-			
-				if (j .lt. n) then       
-c            write(26,110) dt,((AMconv(itrack,j+1)-
-c     *           AMconv(itrack,j-1))/
-c     *           (tstar(j+1)-tstar(j-1)), itrack=1,ntrack)
-     			endif
-     		endif
-     
-     
+         if (k2rad(j).eq. 0.d0) then     
             if (j.gt.index2) then
             
             	if ( tstar(j) .eq. tstar(j-1) ) then
@@ -979,10 +941,6 @@ c          Test Sean
      *           /(3.15d13*(AMconv(itrack,j-1)-AMconv(itrack,j))
      *           ),itrack=1,ntrack)
      
-     
-c            write(67,110) dt,(AMconv(itrack,j-1)*(tstar(j)-tstar(j-1))
-c     *           /(3.15d13*(AMconv(itrack,j-1)-AMconv(itrack,j))
-c     *           ),itrack=1,ntrack)
             write(82,172) dt,(Wconv(itrack,j-1)/Wsol),
      *       (1/((tstar(j)-tstar(j-1))*(Iconv(j-1)
      *           +Irad(j-1))/(3.15d13*(AMconv(itrack,j-1)+
@@ -995,20 +953,9 @@ c               write(74,143) dt,0.0
      *           (Iconv(j-1)-Iconv(j))/
      *           (tstar(j)-tstar(j-1))))
             endif
-c            write(73,143) dt, 0.0
-
          else
          
-         	if ( tstar(j) .ne. tstar(j-1)) then 
-         		if (j .lt. (n-1)) then
-c            write(26,110) dt,((AMconv(itrack,j+1)+
-c     *           AMrad(itrack,j+1)-
-c     *           AMconv(itrack,j-1)-AMrad(itrack,j-1))/
-c     *           (tstar(j+1)-tstar(j-1)), itrack=1,ntrack)
-     			endif
-     		endif
-            if (j.gt.index2) then
-            
+            if (j.gt.index2) then            
             	if ( tstar(j) .eq. tstar(j-1)) then
                  	write(42,147) ((Wconv(itrack,j-1)/Wsol),
      *           	0.0 , itrack=1,ntrack) 
@@ -1027,18 +974,10 @@ c     *           (tstar(j+1)-tstar(j-1)), itrack=1,ntrack)
      *           (AMconv(itrack,j-1)+AMrad(itrack,j-1)), 
      *           itrack=1,ntrack)
 
-c          Test Sean
-
-            write(67,110) dt,((tstar(j)-tstar(j-1))*AMtot
-     *       /(3.15d13*(AMconv(itrack,j-1)+
+            write(67,110) dt,((tstar(j)-tstar(j-1))*(AMconv(itrack,j-1)
+     *           +AMrad(itrack,j-1))/(3.15d13*(AMconv(itrack,j-1)+
      *           AMrad(itrack,j-1)-AMconv(itrack,j)-AMrad(itrack,j))
      *           ),itrack=1,ntrack)
-
-c            write(67,110) dt,((tstar(j)-tstar(j-1))*(AMconv(itrack,j-1)
-c     *           +AMrad(itrack,j-1))/(3.15d13*(AMconv(itrack,j-1)+
-c     *           AMrad(itrack,j-1)-AMconv(itrack,j)-AMrad(itrack,j))
-c     *           ),itrack=1,ntrack)
-
 
             write(82,172) dt,(Wconv(itrack,j-1)/Wsol),
      *       (1/((tstar(j)-tstar(j-1))*(Iconv(j-1)
@@ -1076,7 +1015,6 @@ c               write(73,143) dt,0.0
       close(16)
       close(17)
       close(18)
-      close(21)
       close(23)
       close(24)
       close(25)
@@ -1090,7 +1028,6 @@ c      close(71)
 c      close(72)
       close(73)
       close(74)
-
 
       write (*,'(1x,a)') char(7)
       stop

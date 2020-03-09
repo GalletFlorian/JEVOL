@@ -13,130 +13,18 @@ The input parameters are stored in the rotevoldec.par file
 Input parameters: 
 
 1) pinit: the initial rotation period (P\ :sub:`rot`\) in days
-2) masse: the mass of the star
-3) modele evolutif: the stellar evolution model used
+2) mass: the mass of the star
+3) stellar model : the stellar evolution model used
 4) ksk, kmm, ksc, kmp: Skumanich, Mayor-Mermilliod, Schatzmann, and  Matt braking law constant constants
 5) K, K1MP, K2MP, m: Matt et al. (2012) braking law constants
-6) taudec: :raw-html:`&tau;`
-7) tdisk
-8) brklaw
-9) parameter K3
-10) parameter K4
-11) parameter mvic  
+6) taudec: core-envelope coupling timescale :raw-html:`&tau;`:sub:`c-e` in year
+7) tdisk: star-disk interaction timescale :raw-html:`&tau;`:sub:`disk` in year 
+8) brklaw: selection the braking law (0 = Matt et al. 2012); 1-2 = Reville et al. (2015); 3 = MAtt et al. (2015)) 
+9) K3, K4, mvic: Reville et al. (2015) braking law constants 
 
-
-1) Planetary orbital period (P\ :sub:`orb`\) in days
-2) Stellar rotation period (P\ :sub:`rot`\) in days
-3) Mass of the planet in M\ :sub:`jup`\  
-4) Mass of the star in M\ :sub:`sun`\  
-
-Optional:
-
-5) Name of the system
-6) Error_Prot in days
-7) Error_Porb in days
-
-Return the age of the system in Myr.
-
-Example: 
 
 .. code-block:: bash
 
-    python3.5 TATOO.py 0.84 15.6 2.052 0.71 WASP-43 0.4 0.002
-
-Two ways
---------
-
-You can either use *TATOO* in command line using the TATOO folder.
-
-Or to use a Graphical User Interface (GUI) with the GUI folder. 
-
-This latter will need tkinter that is easily installed using Anaconda.
-
-Installation
-------------
-
-Currently the best way to install *TATOO* is from github.
-
-.. code-block:: bash
-    
-    git clone https://github.com/GalletFlorian/TATOO.git
-    cd TATOO
-    python3.5 setup.py install
-
-Dependencies
-------------
-
-The dependencies of *TATOO* are
-`NumPy <http://www.numpy.org/>`_,
-`scipy <https://www.scipy.org/>`_,
-`matplotlib <https://matplotlib.org/>`_ and
-`tkinter <https://wiki.python.org/moin/TkInter>`_.
-
-
-These can be installed using pip:
-
-.. code-block:: bash
-
-    pip install numpy scipy matplotlib
-
-For tkinter (used for the GUI version of *TATOO*) I recommand you to use Anaconda 
-
-.. code-block:: bash
-
-    conda install tkinter
-
-Data
-----
-
-You'll also need to download the pre-compiled exploration files (Data.tar.gz | 343.9 Mo).
-
-To download the file from Google Drive via command line, an easy way is to use gdown (https://github.com/circulosmeos/gdown.pl). You can install it via pip:
-
-.. code-block:: bash
-    
-    pip install gdown
-    cd ./Data/
-    gdown --id 10SCb8cfI3o86AQiiM9_-itCF1PZUtT7v
-    tar zxvf Data.tar.gz
-    rm Data.tar.gz
-    cd ../
-
-This file contain six folders (0.5Msol | 0.6Msol | 0.7Msol | 0.8Msol | 0.9Msol | 1.0Msol). 
-
-In each of them there are 480 files named Explo_100_sma_prot_sort.dat
-
-.. https://drive.google.com/open?id=10SCb8cfI3o86AQiiM9_-itCF1PZUtT7v
-
-.. The id of the file is
-
-.. id = 10SCb8cfI3o86AQiiM9_-itCF1PZUtT7v
-
-It should be extracted in the Data folder.
-
-GUI
----
-
-python3.5 TATOO_GUI.py 
-
-.. image:: https://raw.githubusercontent.com/GalletFlorian/TATOO/master/docs/GUI.png
-
-+------------------------------------------------------+-----------------------------------------------------+
-|                          Star                        | Planet                                              | 
-+======================================================+=====================================================+
-| Mstar: Mass of the star in solar mass unit           | Mp: Mass of the planet in Jupiter mass unit         | 
-+------------------------------------------------------+-----------------------------------------------------+
-| Prot: Rotation period of the star in days            | Porb: Orbital period of the planet in days          |
-+------------------------------------------------------+-----------------------------------------------------+
-| Errot_prot: RMS error of the rotation period in days | Error_porb: RMS error of the orbital period in days | 
-+------------------------------------------------------+-----------------------------------------------------+
-
-| Gyro: when checked, *TATOO* will give the gyrochronological age of the star
-| Robust: when checked, *TATOO* will explore the vicinity of the properties of the requested system to check the robustness of the age estimation
-
-|
-
-| Coef limit: Value of the requested coefficient for the Pearson correlation coefficient test
-| Nb_step: Number of age estimations for the standard deviation of the age
-
+    make rotevoldec
+    ./rotevoldec.e
 
