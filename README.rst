@@ -12,17 +12,17 @@ The input parameters are stored in the rotevoldec.par file
 
 Input parameters: 
 
-1) pinit: the initial rotation period (P\ :sub:`rot`\) in days  
-2) masse: the mass of the star           
+1) pinit: the initial rotation period (P\ :sub:`rot`\) in days
+2) masse: the mass of the star
 3) modele evolutif: the stellar evolution model used
 4) ksk, kmm, ksc, kmp: Skumanich, Mayor-Mermilliod, Schatzmann, and  Matt braking law constant constants
-5) K, K1MP, K2MP, m: Matt et al. (2012) braking law constants      
-9) taudec: `&tau;`      
-10) tdisk        
-11) brklaw          
-12) parameter K3    
-13) parameter K4    
-14) parameter mvic  
+5) K, K1MP, K2MP, m: Matt et al. (2012) braking law constants
+6) taudec: `&#964;`
+7) tdisk
+8) brklaw
+9) parameter K3
+10) parameter K4
+11) parameter mvic  
 
 
 1) Planetary orbital period (P\ :sub:`orb`\) in days
