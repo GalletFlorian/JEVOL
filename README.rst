@@ -1,9 +1,10 @@
-*TATOO* : Tidal-chronology Age TOOl
-==================================
+*JEVOL* : Angular moment evolution code
+=======================================
 
-This tool is specifically developed for massive close-in planetary systems: M\ :sub:`p`\  > 0.5 M\ :sub:`jup`\  and 0.5 < M\ :sub:`star`\/M\ :sub:`sun`\  < 1.0
+This numerical code is developed to follow the evolution of the rotation rate of low mass stars 0.5 < M\ :sub:`star`\/M\ :sub:`sun`\  < 1.0 from the PMS to the end of the MS.
 
-*TATOO* currently only works with python3.5
+*JEVOL* is writen in Fortran77 
+
 
 Input parameter: 
 

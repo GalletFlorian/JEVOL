@@ -77,7 +77,7 @@ c revised LAG 5.12.96 to improve interpolation scheme: cubic spline
       common/indexs/indexms,indexdec,j,nn,n,indexsun
       common/coeff/coeffri,coeffkir,coeffkic,coeffrri,coeffmri
       common/brake/K3,K4,mvic
-      common/brake/victor
+      common/brake/brklaw
 
       INTEGER NSTEP,NTRACK,NUMTEST,NN,NBTRACK
 
@@ -127,7 +127,7 @@ c added 12.07.07 Solar angular momentum
       INTEGER cramin , cramax , bo
       REAL*8 alphaS,conS
       CHARACTER*100 command
-      integer victor
+      integer brklaw
       real*8 k3,K4,mvic
       REAL*8 Itot, AMtot,DAM2
       NN=NTRACK
@@ -197,7 +197,7 @@ c-----------------------------------------------------------------------
       read(1,98)ident,m
       read(1,98)ident,taudecinit
       read(1,98)ident,tdiskparam
-      read(1,96)ident,victor
+      read(1,96)ident,brklaw
       read(1,98)ident,K3
       read(1,98)ident,K4
       read(1,98)ident,mvic
@@ -206,20 +206,20 @@ c-----------------------------------------------------------------------
       write(6,*) 'Braking law ='
       
       if ((ksk.eq. 0.) .and. (kmm.eq. 0.) .and. (kmp.ne. 0.) .and. 
-     *      (victor .eq. 0)) then 
+     *      (brklaw .eq. 0)) then 
       write(6,*) '******************'
       write(6,*) 'Matt et al. (2012)'
       write(6,*) '******************'
       endif
       
       
-      if ((victor .eq. 1) .or. (victor .eq. 2) ) then
+      if ((brklaw .eq. 1) .or. (brklaw .eq. 2) ) then
       write(6,*) '***********************'
-      write(6,"(a24,I1)") 'Reville et al. (2014) v.',victor
+      write(6,"(a24,I1)") 'Reville et al. (2014) v.',brklaw
       write(6,*) '***********************'
       endif
       
-      if (victor .eq. 3) then
+      if (brklaw .eq. 3) then
       write(6,*) '******************'
       write(6,*) 'Matt et al. (2015)'
       write(6,*) '******************'

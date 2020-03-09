@@ -9,11 +9,11 @@ c****************************************
       common/freinage/G,mdotstar,flag2,Bstar,Ro,ff,mdotstarC,mdotstarJ
       common/indexs/indexms,indexdec,j,nn,n,indexsun
       common/brake/K3,K4,mvic
-      common/brake/victor
+      common/brake/brklaw
 
 
       integer numtest,indexms,indexdec,j,nn,n,itrack,indexsun
-      integer victor
+      integer brklaw
       real*8 taudecinit
       real*8 K3,K4,mvic
       real*8 ksk,kmm,ksc,kmp,ksat,K,K1MP,K2MP,a,b,m,pi
@@ -170,7 +170,7 @@ c
 c------------------------------------------
 
 
-	   if (victor .eq. 1) then
+	   if (brklaw .eq. 1) then
 c     Reville et al. (2015)	   
 	      Wdownconv = K3**2.*Bstar**(4.*mvic) 
      *     *r**(5.*mvic+2.)*w0**(1.)*(mdotstar)**(1.-2.*mvic) *
@@ -180,7 +180,7 @@ c     Reville et al. (2015)
      
        endif
        
-	   if (victor .eq. 2) then
+	   if (brklaw .eq. 2) then
 	   
 	   
 c	        if (t1/year .lt. 4.e7) then
@@ -219,7 +219,7 @@ c     *        r**(3.))**(mvic))
      
        endif
        
-       if (victor .eq. 3) then
+       if (brklaw .eq. 3) then
 c      Matt et al. 2015
 
             tcz = 314.24*exp(-(Teff/1952.5)-(Teff/6250.)**18.)+ 0.002
