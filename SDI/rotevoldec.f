@@ -105,7 +105,7 @@ c added 12.07.07 Solar angular momentum
       REAL*8 WINIT,JUPRAD,WUPRAD,WUPCONV,WDOWNCONV
       REAL*8 WRAD(NTRACK,NSTEP),WCONV(NTRACK,NSTEP),
      *     WCRIT,WSAT,AMconv(ntrack,nstep), DJ(ntrack,nstep),
-     *     amrad(ntrack,nstep)
+     *     AMrad(ntrack,nstep)
       REAL*8 RINIT, MSTAR ,TAUDEC ,DELTAWR,DELTAWC, deltaJ
       REAL*8 DPI, KMS, MSOL, YEAR, PI
       REAL*8 KSK,KMM,KSC,KMP,KSAT,K,K1MP,K2MP,a,a1,a2,b,wsf
@@ -376,13 +376,6 @@ c this condition is here to display just once the value of indexdec because inde
  1101    format('The core starts to develop at the step ',I3)
  1102    format('The star arrives on the main-sequence at the step ',I3)
          close(unit=10)
-
-c call of the interpolation subroutine spline, for the coefficients calculations
-c         call spline(tstar,rstar*rstar,n,1.e30,1.e30,coeffri)
-c         call spline(tstar,k2rad,n,1.e30,1.e30,coeffkir)
-c         call spline(tstar,k2conv,n,1.e30,1.e30,coeffkic)
-c         call spline(tstar,Rrad*Rrad,n,1.e30,1.e30,coeffrri)
-c         call spline(tstar,Mrad,n,1.e30,1.e30,coeffmri)
          
 c  DISK LIFETIME: star-disk uncoupling occurs at t = t_disk = tstar(index)
 c if index = n, at the end of the simulation the disk is still present
@@ -442,9 +435,7 @@ c 	     Bsol en gauss
             
 c           Magnetic braking
             Rco = (G*mstar*msol/Wconv(itrack,j-1)**2.)**(1./3.)
-
-            if (cl .eq. 1) then
-
+          if (cl .eq. 1) then
             call magnbrakcl(Wdownconv,
      *              Wconv(itrack,j-1),rstar(j-1),Lum(j-1),tstar(j),
      *              tstar(j-1),Iconv(j-1),itrack,Teff(j-1),Macc)
@@ -461,7 +452,7 @@ c           Magnetic braking
      *                             ((Rt/Rco)**(3./2.)-Krot)
             !Jdown = 0.0
 
-            else
+          else
 
             call magnbrakcl(Wdownconv,
      *              Wconv(itrack,j-1),rstar(j-1),Lum(j-1),tstar(j),
@@ -471,98 +462,92 @@ c           Magnetic braking
 
             Rt = Kt*((Bstar**4.*Rstar(j-1)**12.)/
      *                (G*Mstar*msol*Macc**2.))**(1./7.) 
-
             write(78,516)  tstar(j)/(1e6*year), Rt/Rco, Rt/Rsol,Rco/Rsol
-           
             ! Matt et al. 2005b
             Jdown =-(1./(3.*Beta))*((Bstar**2.*Rstar(j-1)**6.)/Rco**3.)*
      *      (-2.*(1.+beta*gammac)**(-1.)+(1.+beta*gammac)**(-2.)+ 
      *      2.*(Rco/Rt)**(3./2.)-(Rco/Rt)**(3.))*10.
 
-            endif 
+          endif 
 
-			! Sean
-c			Jup = Macc*(G*mstar*msol*Rstar(j-1))**0.5*
+		  ! Sean
+c		  Jup = Macc*(G*mstar*msol*Rstar(j-1))**0.5*
 c     *      (  (Rt/Rstar(j-1))**0.5-0.2*0.1 )
 			
-			! Claudio
-            Jup = Kacc*Macc * (G*mstar*msol*Rt)**0.5
+		  ! Claudio
+       	  Jup = Kacc*Macc * (G*mstar*msol*Rt)**0.5
 
-c           Spin up from contraction
-            Wupconv = Wconv(itrack,j-1) * (Iconv(j-1)/Iconv(j)-1.)
-            
+c         Spin up from contraction
+          Wupconv = Wconv(itrack,j-1) * (Iconv(j-1)/Iconv(j)-1.)
+                  
+c         Star/disk interaction torque
+          Jtot = Jup + Jdown
 
-        
-c           Star/disk interaction torque
-            Jtot = Jup + Jdown
-
-            if (Jtot .gt. Macc*(G*mstar*msol*Rt)**0.5) then
-c              Jtot = Macc*(G*mstar*msol*Rt)**0.5
-              
-              Jtot =  Macc*(G*mstar*msol*Rstar(j-1))**0.5*
+          if (Jtot .gt. Macc*(G*mstar*msol*Rt)**0.5) then              
+           Jtot =  Macc*(G*mstar*msol*Rstar(j-1))**0.5*
      *      	((Rt/Rstar(j-1))**0.5-0.2*0.1 )
               
-            endif 
+          endif 
 
-            Jtot = Jtot*(tstar(j)-tstar(j-1))/Iconv(j-1)
+          Jtot = Jtot*(tstar(j)-tstar(j-1))/Iconv(j-1)
             
 c  call interpolation routine if velocity change .gt. 10% of initial velocity
-               flag = 0.
-               Jdown = Jdown*(tstar(j)-tstar(j-1))/Iconv(j-1)
-               Jup = Jup*(tstar(j)-tstar(j-1))/Iconv(j-1)
-
-               call interpolA(Wdownconv,Wupconv,Jdown,Jup,
+          flag = 0.
+          Jdown = Jdown*(tstar(j)-tstar(j-1))/Iconv(j-1)
+          Jup = Jup*(tstar(j)-tstar(j-1))/Iconv(j-1)
+ 
+          call interpolA(Wdownconv,Wupconv,Jdown,Jup,
      *        Wconv(itrack,j-1),Winterfin,itrack,braking_law,flag,index)
 
-               dt1= tstar(j)/(year*1.0e6)
+          dt1= tstar(j)/(year*1.0e6)
                
-               if (flag .eq. 1) then
-                  Wconv(itrack,j) = Winterfin
-                  Wrad(itrack,j)=0.
-                  Jcont = Wupconv * Iconv(j-1)/(tstar(j)-tstar(j-1))
-                  write(79,*) Wconv(itrack,j)/Wsol,dt1,Jdown,Jup,
-     *            torquewind,Jcont,AMconv(itrack,j-1)+AMrad(itrack,j-1),
-     *            Rt/Rsol,Rco/Rsol                 
-               else
-                  Jdown = Jdown*Iconv(j-1)/(tstar(j)-tstar(j-1))
-                  Jup = Jup*Iconv(j-1)/(tstar(j)-tstar(j-1))
-                  Wconv(itrack,j) = Wconv(itrack,j-1)+Wupconv-Wdownconv+
-     *            Jtot
-                  Wrad(itrack,j)=0.
-                  Jcont = Wupconv * Iconv(j-1)/(tstar(j)-tstar(j-1))
-                  write(79,*) Wconv(itrack,j)/Wsol,dt1,Jdown,Jup,
-     *            Wdownconv*Iconv(j-1)/(tstar(j)-tstar(j-1)),Jcont,
-     *            AMconv(itrack,j-1)+AMrad(itrack,j-1),Rt/Rsol,Rco/Rsol
-               endif
+          if (flag .eq. 1) then
+             Wconv(itrack,j) = Winterfin
+             Wrad(itrack,j)=0.
+             Jcont = Wupconv * Iconv(j-1)/(tstar(j)-tstar(j-1))
+             write(79,*) Wconv(itrack,j)/Wsol,dt1,Jdown,Jup,
+     *          torquewind,Jcont,AMconv(itrack,j-1)+AMrad(itrack,j-1),
+     *          Rt/Rsol,Rco/Rsol                 
+          else
+             Jdown = Jdown*Iconv(j-1)/(tstar(j)-tstar(j-1))
+             Jup = Jup*Iconv(j-1)/(tstar(j)-tstar(j-1))
+             Wconv(itrack,j) = Wconv(itrack,j-1)+Wupconv-Wdownconv+
+     *          Jtot
+             Wrad(itrack,j)=0.
+             Jcont = Wupconv * Iconv(j-1)/(tstar(j)-tstar(j-1))
+             write(79,*) Wconv(itrack,j)/Wsol,dt1,Jdown,Jup,
+     *          Wdownconv*Iconv(j-1)/(tstar(j)-tstar(j-1)),Jcont,
+     *          AMconv(itrack,j-1)+AMrad(itrack,j-1),Rt/Rsol,Rco/Rsol
+          endif
 
-c --------------------------------------------------------------------------
+c ----------------------------------------------------------------------
 
-            Wrad(itrack,j)=0.
-            dj(itrack,j)=0.
-            AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
-            amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+          Wrad(itrack,j)=0.
+          dj(itrack,j)=0.
+          AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
+          AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
 
-c------Decroissance du taux d'accrétion en t^-1.2  Caratti o Garatti------------------- 
+c------Decrease of the accretion rate  t^-1.2  Caratti o Garatti--------
 c         func=((tdisk(itrack)-(tstar(j)/year))/tdisk(itrack))**(1.2)
 c         func = (tdisk(itrack)/(tstar(j)/year))**1.2
 c         func = exp(-tstar(j)/(tdisk(itrack)*year))
-               if (tstar(j) .le. tdisk(itrack)*year) then
-                 func = ((tdisk(itrack)*year/tstar(ndebut))-1)**(-1.2)*
+          if (tstar(j) .le. tdisk(itrack)*year) then
+          	func = ((tdisk(itrack)*year/tstar(ndebut))-1)**(-1.2)*
      *             ((tdisk(itrack)*year/tstar(j))-1)**(1.2)
-               else
-                 func = 0.0
-               endif
-         Macc =Mainit*func
-c--------------------------------------------------------------------------------------
+          else
+          	func = 0.0
+          endif
+          Macc =Mainit*func
+c-----------------------------------------------------------------------
 
-               dt1= tstar(j)/(year*1.0e6)
-               if (itrack .eq. Nbtrack) then
-                 write(70,512) dt1, Wconv(itrack,j)/Wsol,  mdotstar
-                 write(72,513) dt1, Wconv(itrack,j)/Wsol, Bstar,Ro
-                 write(75,514) dt1,ff,Ro,Wconv(itrack,j)/Wsol
-                 write(77,515) dt1, Wdownconv*Iconv(j-1)/
+          dt1= tstar(j)/(year*1.0e6)
+          if (itrack .eq. Nbtrack) then
+          	write(70,512) dt1, Wconv(itrack,j)/Wsol,  mdotstar
+          	write(72,513) dt1, Wconv(itrack,j)/Wsol, Bstar,Ro
+          	write(75,514) dt1,ff,Ro,Wconv(itrack,j)/Wsol
+          	write(77,515) dt1, Wdownconv*Iconv(j-1)/
      *           (tstar(j)-tstar(j-1))
-               endif
+          endif
 
 
          enddo
@@ -572,7 +557,7 @@ c-------------------------------------------------------------------------------
  101     format(' Track #',i2, ' initial P & V conv =',(f4.1,1x,f7.3),
      *        ' at t = ',d8.3,' logt = ',f5.2)
      
-       write(6,*) "Fin partie I"
+       	 write(6,*) "End part I"
 
 
 c II. A. The disk disappear before the decoupling (indexdec > index)
@@ -629,7 +614,7 @@ c  call interpolation routine if velocity change .gt. 10% of initial velocity
                dt=(tstar(j)-tstar(j-1))/year
                dj(itrack,j)=deltaJ   
                AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
-               amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+               AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
 
  108           format(f7.4,2x,2(f8.3,2x),7(d10.4,2x))
  111           format(f7.4,2x,2(f7.3,2x),6(d10.4,2x))
@@ -783,7 +768,7 @@ c     *   deltaJ/taudec
                end if
 
                dj(itrack,j)=deltaJ
-               amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+               AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
                AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
 
  109           format(f7.4,2x,2(F8.4,2x),7(d10.4,2x))
@@ -836,7 +821,7 @@ c-------------------------------------------------------------------------------
 
          endif
 		
-		write(6,*) "Fin partie II, at age", dt1
+		write(6,*) "End part II, at age", dt1
 
 c   III Core-envelope decoupling & star-disk uncoupled
 c       **********************************************
@@ -910,7 +895,7 @@ c We pass here only once, when j = index2+1 = indexdec
                  
             dj(itrack,j)=deltaJ
             AMconv(itrack,j)=iconv(j)*Wconv(itrack,j)
-            amrad(itrack,j)=Irad(j)*Wrad(itrack,j)
+            AMrad(itrack,j)=Irad(j)*Wrad(itrack,j)
 
  112        format(5(f8.5,2x))
 
@@ -930,19 +915,16 @@ c     *           (Wconv(itrack,j)-Wrad(itrack,j))
             
         
          if (dt1  .gt. 7) then
-         	write(6,*) "Age fin = ", dt1
+         	write(6,*) "Final age = ", dt1
          	exit	
          endif	
             
          enddo
          
-         
-
-         
-
+        
       end do !continue with next evolutionary track
 
-      write(6,*) "Fin partie III"
+      write(6,*) "End part III"
 c 
 c   IV Write results
 c      *************

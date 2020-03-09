@@ -116,27 +116,6 @@ c        Bstar = 1.e-10
 c        Wdownconv = 1.e-10
 c------------------------------------
 
-
-c-----------------------------------------------------------------------
-c
-c
-c------------------Reiners & Mohanty 2012 braking law-------------------
-
-c        if (w0.lt.Wsat) then
-c          Wdownconv = K1MP**2.*kmp*3**(4.*m)*Wsol**(-b*4.*m)* 
-c     *        r**(5.*m+2.)*w0**(1.+b*4.*m) * (mdotstar)**(1.-2.*m) *
-c     *        (t1-t2)/(Ic *(K2MP**2. *2.*G*mstar*msol + K*w0**(2.) *
-c     *        r**(3.))**(m))
-c        else
-c          Wdownconv = K1MP**(2.)*3**(4.*m)*ksat* Wsol**(-b*4.*m)*
-c     *        r**(5.*m+2.)*w0 * (mdotstar)**(1.-2.*m) * 
-c     *        (t1-t2) / (Ic * (K2MP**2. *2.*G*mstar*msol + 
-c     *        K*wsat**(2.)*r**(3.))**(m))
-c        end if   
-
-c-----------------------------------------------------------------------
-
-
 c ---------------------------------------------
 c Add of the Reiners & Mohanty 2012 braking law
       else if ((ksk.eq.0.) .and. (kmm.eq.0.) .and. (kmp.eq.0.)) then
