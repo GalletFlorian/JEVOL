@@ -6,7 +6,7 @@
 
 This numerical code is developed to follow the evolution of the rotation rate of low mass stars 0.5 < M\ :sub:`star`\/M\ :sub:`sun`\  < 1.0 from the PMS to the end of the MS.
 
-*JEVOL* is writen in Fortran77 
+*JEVOL* is written in Fortran77 
 
 The input parameters are stored in the rotevoldec.par file
 
