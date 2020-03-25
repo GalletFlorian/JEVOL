@@ -28,3 +28,5 @@ Input parameters:
     make rotevoldec
     ./rotevoldec.e
 
+
+The SDI part include the star-disk interaction described in Gallet, Zanni & Amard 2019 (https://ui.adsabs.harvard.edu/abs/2019A%26A...632A...6G/abstract)
