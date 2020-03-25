@@ -18,12 +18,12 @@ constantes: ksk    0.0d-12        	w^3 law
 parameter K        1.d0
 parameter K1MP     1.7d0
 parameter K2MP     0.0506d0
-parameter a1       1.3d0            	Slow rotator (1M0) ; plus utilisé
-parameter a2       0.79d0            	Fast rotator (1M0) ; plus utilisé
-parameter wsf      5.d0            		omega limit btw slow and fast ; plus utilisé
-parameter b        1.65d0           	B prop w^b ; plus utilisé
-parameter m        0.22d0           	Matt & Pudritz
-Omegasat           12.              	omega sun -> w law ; plus utilisé
-taudec             10.d6          		year  
-cl                 1                    Star/disk interaction process (1 = Claudio, 0 = Sean)
-tdisk              2.d6                 Disk lifetime, yr
+parameter a1       1.3d0            	Slow rotator (1M0) ; not used
+parameter a2       0.79d0            	Fast rotator (1M0) ; not used
+parameter wsf      5.d0            		omega limit btw slow and fast ; not used
+parameter b        1.65d0            	B prop w^b ; not used
+parameter m        0.22d0            	Matt & Pudritz
+Omegasat           12.            		omega sun -> w law ; not used
+taudec             10.d6            	year  
+cl                 1            		Star/disk interaction process (1 = Claudio, 0 = Sean)
+tdisk              2.d6            		Disk lifetime, yr
