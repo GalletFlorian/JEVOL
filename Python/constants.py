@@ -1,0 +1,30 @@
+"""
+Physical constants and conversion factors in CGS units.
+"""
+
+MSOL = 1.989e33
+RSOL = 6.9599e10
+WSOL = 2.87e-6
+LSOL = 3.826e33
+AMSOL = 1.63e48
+ISOL = 6.411e53
+DAMSOL = 7.169e30
+
+G = 6.673e-8
+MDOTSUN = 1.31e12
+
+KMS = 1.1e5
+DAY = 2.4e1 * 36.0e2
+YEAR = 365.0 * DAY
+PI = 3.14159
+DPI = 2.0 * PI
+
+AGESUN = 4.5e9
+MDOTYR = 6.30276e25
+
+ALPHAS = 0.0
+CONS = 10.0
+
+KSK_SCALE = 1.5e59
+KMM_SCALE = 2.1e53
+KSC_SCALE = 1.9e55

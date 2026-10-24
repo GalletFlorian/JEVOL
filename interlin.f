@@ -395,7 +395,7 @@ c            write(6,*) "Condition vitesse égale interpolB"
             else
                dJ=-iri(k)*ici(k)/(iri(k)+ici(k))*(Wc0-Wri(k))
             endif
-            sum1=sum1+juprad/iri(k)
+            sum1=sum1+Juprad/iri(k)
             sum2=sum2+dWr
             sum3=sum3+wur
          enddo
